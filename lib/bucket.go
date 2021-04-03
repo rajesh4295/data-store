@@ -27,9 +27,24 @@ func (b *Bucket) Search(key string) bool {
 	return false
 }
 
+func (b *Bucket) Get(key string) StoreData {
+	if b.Search(key) {
+		current := b.Head
+		for current != nil {
+			if current.Data.Key == key {
+				return current.Data
+			}
+			current = current.Next
+		}
+	} else {
+		fmt.Println(key, "doesn't exists")
+	}
+	return StoreData{}
+}
+
 //delete
 func (b *Bucket) Delete(key string) bool {
-	if !b.Search(key) {
+	if b.Search(key) {
 		if b.Head.Data.Key == key {
 			b.Head = b.Head.Next
 			b.Length--

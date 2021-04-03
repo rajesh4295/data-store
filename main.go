@@ -1,32 +1,22 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
+	"os"
+	"os/exec"
+	"strings"
 
 	"github.com/rajesh4295/data-store/lib"
 )
 
-// "bufio"
-
-// "log"
-// "os"
-// "os/exec"
-// "strings"
-
 func main() {
 	store := lib.InitStore()
 
-	store.Insert(lib.StoreData{Key: "name", Value: "rajesh"})
-	store.Insert(lib.StoreData{Key: "dob", Value: "feb"})
-	store.Insert(lib.StoreData{Key: "company", Value: "tibco"})
+	reader := bufio.NewReader(os.Stdin)
 
-	fmt.Println(store.GetLoad())
-
-	fmt.Println(store.Search("name"))
-
-	// reader := bufio.NewReader(os.Stdin)
-
-	/* for {
+	for {
 		fmt.Print("$ ")
 		cmd, err := reader.ReadString('\n')
 
@@ -39,10 +29,17 @@ func main() {
 
 		switch baseCmd {
 		case "set":
-			isValid := precheckSet(cmdArr)
+			isValid := precheck(baseCmd, cmdArr)
 			if isValid {
-
+				handleSet(cmdArr, store)
 			}
+		case "get":
+			isValid := precheck(baseCmd, cmdArr)
+			if isValid {
+				handleGet(cmdArr, store)
+			}
+		case "size":
+			handleSize(store)
 		case "exit", "quit":
 			os.Exit(0)
 		case "clear":
@@ -56,16 +53,40 @@ func main() {
 		default:
 			handleUnsupportedInp(baseCmd)
 		}
-	} */
+	}
 }
 
-// func precheckSet(cmdArr []string) bool {
-// 	if len(cmdArr) == 1 {
-// 		fmt.Println(cmdArr[0], "cmd expects a key and a value")
-// 		return false
-// 	}
-// 	return true
-// }
-// func handleUnsupportedInp(cmd string) {
-// 	fmt.Println(cmd, "not recognized")
-// }
+func precheck(action string, cmdArr []string) bool {
+
+	switch action {
+	case "set":
+		if len(cmdArr) < 3 {
+			fmt.Println(cmdArr[0], "expects a key and a value. Example:$ set name jhon")
+			return false
+		}
+	case "get":
+		if len(cmdArr) < 2 {
+			fmt.Println(cmdArr[0], "expects a key. Example:$ get name")
+			return false
+		}
+	}
+
+	return true
+}
+
+func handleSet(cmdArr []string, store *lib.Store) {
+	data := lib.StoreData{Key: cmdArr[1], Value: cmdArr[2]}
+	store.Insert(data)
+}
+
+func handleGet(cmdArr []string, store *lib.Store) {
+	fmt.Println(store.Get(cmdArr[1]))
+}
+
+func handleSize(store *lib.Store) {
+	fmt.Println(store.GetLoad())
+}
+
+func handleUnsupportedInp(cmd string) {
+	fmt.Println(cmd, "not recognized")
+}

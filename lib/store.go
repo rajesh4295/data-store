@@ -1,5 +1,7 @@
 package lib
 
+import "fmt"
+
 // insert data in store
 func (s *Store) Insert(data StoreData) {
 	idx := Hash(data.Key, StoreSize)
@@ -15,13 +17,30 @@ func (s *Store) Insert(data StoreData) {
 // search data in store
 func (s *Store) Search(key string) bool {
 	idx := Hash(key, StoreSize)
-	return s.Slot[idx].Search(key)
+	if s.Slot[idx] != nil {
+		return s.Slot[idx].Search(key)
+	}
+	fmt.Println(key, "doesn't exists")
+	return false
+}
+
+func (s *Store) Get(key string) StoreData {
+	idx := Hash(key, StoreSize)
+	if s.Slot[idx] != nil {
+		return s.Slot[idx].Get(key)
+	}
+	fmt.Println(key, "doesn't exists")
+	return StoreData{}
 }
 
 // delete data from store
 func (s *Store) Delete(key string) bool {
 	idx := Hash(key, StoreSize)
-	return s.Slot[idx].Delete(key)
+	if s.Slot[idx] != nil {
+		return s.Slot[idx].Delete(key)
+	}
+	fmt.Println(key, "doesn't exists")
+	return false
 }
 
 // get current load of store
