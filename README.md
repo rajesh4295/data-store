@@ -28,7 +28,7 @@ $ execute commands in the shell
 | Cmd | Description | Syntax | Usage | Output
 | ------ |------ | ------ | ------ | ------ | 
 | set | Add key value | set [key] [value] | set username rajesh4295 |
-| get | Get value by key | get [key] | get username | rajesh4295
+| get | Get value by key | get [key] | get username | {username rajesh4295}
 | exist | Check if key exists | exist [key] | exist username | true/false
 | delete | Delete value by key | delete [key] | delete username | true/false
 | size | Returns current load in the store. | size | size |  `0% 10% 80%` ...
