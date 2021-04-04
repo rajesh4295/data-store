@@ -2,14 +2,14 @@
 ## First project in "Golang"
 
 
-Data-store is a simple key-value storage written in Go.
+Data-store is a simple key-value storage cli shell written in Go.
 
 ## Features
 - Set data
 - Get data
 - Search data
 - Delete data
-- Load in store
+- Check curent load in store
 - Export data
 
 ## Installation
