@@ -27,10 +27,10 @@ $ execute commands in the shell
 
 | Cmd | Description | Syntax | Usage | Output
 | ------ |------ | ------ | ------ | ------ | 
-| set | Add key value | set <key> <value> | set username rajesh4295 |
-| get | Get value by key | get <key> | get username | rajesh4295
-| exist | Check if key exists | exist <key> | exist username | true/false
-| delete | Delete value by key | set <key> <value> | set username rajesh4295 | true/false
+| set | Add key value | set [key] [value] | set username rajesh4295 |
+| get | Get value by key | get [key] | get username | rajesh4295
+| exist | Check if key exists | exist [key] | exist username | true/false
+| delete | Delete value by key | delete [key]> | delete username | true/false
 | size | Returns current load in the store. | size | size |  `0% 10% 80%` ...
 | export | Exports complete data to `data.json` in the current folder | export | export | 
 | exit/quit | Exits from the cli shell | exit/quit | exit/quit | 
@@ -41,6 +41,7 @@ $ execute commands in the shell
 ## TODO
 - Grow/ shrink store based on load factor
 - Preload store from json
+- Support value with spaces
 
 ## License
 
