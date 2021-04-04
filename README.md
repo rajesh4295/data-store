@@ -43,6 +43,7 @@ $ execute commands in the shell
 ## TODO
 - Grow/ shrink store based on load factor
 - Preload store from json
+- Support value with spaces
 
 ## License
 
