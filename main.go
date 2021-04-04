@@ -25,21 +25,38 @@ func main() {
 		}
 
 		cmdArr := strings.Fields(cmd)
-		baseCmd := cmdArr[0]
+		baseCmd := ""
+		if len(cmdArr) > 0 {
+			baseCmd = cmdArr[0]
+		} else {
+			continue
+		}
 
 		switch baseCmd {
 		case "set":
 			isValid := precheck(baseCmd, cmdArr)
 			if isValid {
-				handleSet(cmdArr, store)
+				set(cmdArr, store)
 			}
 		case "get":
 			isValid := precheck(baseCmd, cmdArr)
 			if isValid {
-				handleGet(cmdArr, store)
+				get(cmdArr, store)
 			}
+		case "exist":
+			isValid := precheck(baseCmd, cmdArr)
+			if isValid {
+				exist(cmdArr, store)
+			}
+		case "delete":
+			isValid := precheck(baseCmd, cmdArr)
+			if isValid {
+				delete(cmdArr, store)
+			}
+		case "export":
+			export(store)
 		case "size":
-			handleSize(store)
+			size(store)
 		case "exit", "quit":
 			os.Exit(0)
 		case "clear":
@@ -64,9 +81,9 @@ func precheck(action string, cmdArr []string) bool {
 			fmt.Println(cmdArr[0], "expects a key and a value. Example:$ set name jhon")
 			return false
 		}
-	case "get":
+	case "get", "exist", "delete":
 		if len(cmdArr) < 2 {
-			fmt.Println(cmdArr[0], "expects a key. Example:$ get name")
+			fmt.Println(cmdArr[0], "expects a key. Example:$", cmdArr[0], "name")
 			return false
 		}
 	}
@@ -74,19 +91,30 @@ func precheck(action string, cmdArr []string) bool {
 	return true
 }
 
-func handleSet(cmdArr []string, store *lib.Store) {
+func set(cmdArr []string, store *lib.Store) {
 	data := lib.StoreData{Key: cmdArr[1], Value: cmdArr[2]}
 	store.Insert(data)
 }
 
-func handleGet(cmdArr []string, store *lib.Store) {
+func get(cmdArr []string, store *lib.Store) {
 	fmt.Println(store.Get(cmdArr[1]))
 }
 
-func handleSize(store *lib.Store) {
-	fmt.Println(store.GetLoad())
+func exist(cmdArr []string, store *lib.Store) {
+	fmt.Println(store.Search(cmdArr[1]))
 }
 
+func delete(cmdArr []string, store *lib.Store) {
+	fmt.Println(store.Delete(cmdArr[1]))
+}
+
+func size(store *lib.Store) {
+	fmt.Println(store.GetLoad(), "%")
+}
+
+func export(store *lib.Store) {
+	store.Export()
+}
 func handleUnsupportedInp(cmd string) {
 	fmt.Println(cmd, "not recognized")
 }

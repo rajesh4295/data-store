@@ -1,6 +1,8 @@
 package lib
 
-const StoreSize = 13
+const (
+	StoreSize = 13
+)
 
 // hash table
 type Store struct {

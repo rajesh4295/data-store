@@ -42,6 +42,16 @@ func (b *Bucket) Get(key string) StoreData {
 	return StoreData{}
 }
 
+func (b *Bucket) GetAll() []StoreData {
+	data := make([]StoreData, 0)
+	current := b.Head
+	for current != nil {
+		data = append(data, current.Data)
+		current = current.Next
+	}
+	return data
+}
+
 //delete
 func (b *Bucket) Delete(key string) bool {
 	if b.Search(key) {
