@@ -2,13 +2,16 @@ package lib
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/fs"
 	"io/ioutil"
 	"strconv"
 )
 
-// insert data in store
+// Insert data in store
+// Accepts arguement of type StoreData.
+// Returns void
 func (s *Store) Insert(data StoreData) {
 	idx := Hash(data.Key, StoreSize)
 	// if slot is empty, then first init the bucket and then inster data
@@ -20,27 +23,34 @@ func (s *Store) Insert(data StoreData) {
 	}
 }
 
-// search data in store
-func (s *Store) Search(key string) bool {
+// Search data in store.
+// Accepts key od type string as an argument.
+// Returns boolean flag or error.
+func (s *Store) Search(key string) (flag bool, err error) {
 	idx := Hash(key, StoreSize)
 	if s.Slot[idx] != nil {
-		return s.Slot[idx].Search(key)
+		return s.Slot[idx].Search(key), nil
 	}
-	fmt.Println(key, "doesn't exists")
-	return false
+	errMsg := fmt.Sprintf("%s doesn't exists", key)
+	return false, errors.New(errMsg)
 }
 
-func (s *Store) Get(key string) StoreData {
+// Get value from store using key.
+// Accepts key of type string as an argument.
+// Returns data of type Storedata or err.
+func (s *Store) Get(key string) (data StoreData, err error) {
 	idx := Hash(key, StoreSize)
 	if s.Slot[idx] != nil {
-		return s.Slot[idx].Get(key)
+		return s.Slot[idx].Get(key), nil
 	}
-	fmt.Println(key, "doesn't exists")
-	return StoreData{}
+	errMsg := fmt.Sprintf("%s doesn't exists", key)
+	return StoreData{}, errors.New(errMsg)
 }
 
-// delete data from store
-func (s *Store) Delete(key string) bool {
+// Delete data from store.
+// Accepts key of type string.
+// Returns boolean flag or error
+func (s *Store) Delete(key string) (flag bool, err error) {
 	idx := Hash(key, StoreSize)
 	if s.Slot[idx] != nil {
 		del := s.Slot[idx].Delete(key)
@@ -48,13 +58,13 @@ func (s *Store) Delete(key string) bool {
 		if s.Slot[idx].Length == 0 {
 			s.Slot[idx] = nil
 		}
-		return del
+		return del, nil
 	}
-	fmt.Println(key, "doesn't exists")
-	return false
+	errMsg := fmt.Sprintf("%s doesn't exists", key)
+	return false, errors.New(errMsg)
 }
 
-// get current load of store
+// Get current load of store
 // TODO: If load goes above 80% then double the size of store
 func (s *Store) GetLoad() int {
 	// return len(s.Slot)
@@ -68,7 +78,8 @@ func (s *Store) GetLoad() int {
 	return int(load)
 }
 
-func (s *Store) Export() {
+// Export all data in the store to json file.
+func (s *Store) Export() error {
 	data := make(map[string][]StoreData)
 	for i := range s.Slot {
 		if s.Slot[i] != nil {
@@ -78,10 +89,11 @@ func (s *Store) Export() {
 	}
 	j, err := json.Marshal(data)
 	if err != nil {
-		fmt.Println("could not marshal data", err)
+		return err
 	}
 	err = ioutil.WriteFile("./data.json", j, fs.FileMode(0777))
 	if err != nil {
-		fmt.Println("could not write data to file", err)
+		return err
 	}
+	return nil
 }

@@ -11,6 +11,43 @@ import (
 	"github.com/rajesh4295/data-store/lib"
 )
 
+const (
+	helpBanner = `
+		List of available commands
+		help
+			- Prints help
+			- Usage: help
+		set
+			- Add key value to store.
+			- Usage: set <key> <value>
+			- Example: set username rajesh4295
+		get
+			- Get value by key from store.
+			- Usage: get <key>
+			- Example: get username	
+		exist
+			- Check if key exists in store.
+			- Usage: exist <key>
+			- Example: exist username
+		delete
+			- Delete value by key from store.
+			- Usage: delete <key>
+			- Example: delete username
+		size
+			- Returns current load in the store.
+			- Usage: size
+		export
+			- Exports complete data in store to data.json file in the current folder.
+			- Usage: export
+		clear
+			- Clears the terminal
+			- Usage: clear
+		quit/exit
+			- Exits from the data-store cli shell.
+			- Usage: quit or exit
+	`
+)
+
 func main() {
 	store := lib.InitStore()
 
@@ -26,13 +63,14 @@ func main() {
 
 		cmdArr := strings.Fields(cmd)
 		baseCmd := ""
-		if len(cmdArr) > 0 {
-			baseCmd = cmdArr[0]
-		} else {
+		if len(cmdArr) < 1 {
 			continue
 		}
+		baseCmd = cmdArr[0]
 
 		switch baseCmd {
+		case "help":
+			fmt.Println(helpBanner)
 		case "set":
 			isValid := precheck(baseCmd, cmdArr)
 			if isValid {
@@ -97,15 +135,26 @@ func set(cmdArr []string, store *lib.Store) {
 }
 
 func get(cmdArr []string, store *lib.Store) {
-	fmt.Println(store.Get(cmdArr[1]))
+	res, err := store.Get(cmdArr[1])
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(res)
+	}
 }
 
 func exist(cmdArr []string, store *lib.Store) {
-	fmt.Println(store.Search(cmdArr[1]))
+	res, _ := store.Search(cmdArr[1])
+	fmt.Println(res)
 }
 
 func delete(cmdArr []string, store *lib.Store) {
-	fmt.Println(store.Delete(cmdArr[1]))
+	res, err := store.Delete(cmdArr[1])
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println(res)
+	}
 }
 
 func size(store *lib.Store) {
@@ -113,8 +162,12 @@ func size(store *lib.Store) {
 }
 
 func export(store *lib.Store) {
-	store.Export()
+	err := store.Export()
+	if err != nil {
+		fmt.Println(err)
+	}
 }
+
 func handleUnsupportedInp(cmd string) {
 	fmt.Println(cmd, "not recognized")
 }

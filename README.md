@@ -1,5 +1,5 @@
 # Data-store
-## First project in "Golang"
+## First project in Go
 
 
 Data-store is a simple key-value storage cli shell written in Go.
@@ -27,12 +27,14 @@ $ execute commands in the shell
 
 | Cmd | Description | Syntax | Usage | Output
 | ------ |------ | ------ | ------ | ------ | 
+| help | Print help | help | help | Help banner
 | set | Add key value | set <key> <value> | set username rajesh4295 |
 | get | Get value by key | get <key> | get username | rajesh4295
 | exist | Check if key exists | exist <key> | exist username | true/false
 | delete | Delete value by key | set <key> <value> | set username rajesh4295 | true/false
 | size | Returns current load in the store. | size | size |  `0% 10% 80%` ...
 | export | Exports complete data to `data.json` in the current folder | export | export | 
+| clear | Clears terminal | clear | clear | 
 | exit/quit | Exits from the cli shell | exit/quit | exit/quit | 
 
 ## Implementation
